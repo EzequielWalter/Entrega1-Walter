@@ -7,7 +7,7 @@ class Alumno(models.Model):
     nombre = models.CharField(max_length=30)
     apellido = models.CharField(max_length=30)
     edad = models.IntegerField()
-    fecha_nacimiento = models.DateField(null=True)  # Es True para que pueda estar vacio
+    fecha_inicio_curso = models.DateField(null=True)
     
-    def __str__(self):                                      # Sirve para poner los datos de la base de datos para mostarla desde el ADMIN
+    def __str__(self):
         return f'{self.nombre} {self.apellido}'

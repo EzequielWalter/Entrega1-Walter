@@ -1,14 +1,8 @@
 from unittest import loader
-from django.http import HttpResponse
 
-
-from django.http import HttpResponse
-from datetime import datetime, timedelta
-from django.template import Context, Template, loader
+from datetime import datetime
 from django.shortcuts import render, redirect
-import random
 from home.forms import BusquedaAlumnoFormulario, AlumnoFormulario
-
 from home.models import Alumno
 
 # Create your views here.
@@ -22,40 +16,45 @@ def about(request):
     
     return render(request, 'home/about.html')
 
-########################
+def contact(request):
+    
+    return render(request, 'home/contacto.html')
 
 def crear_alumno(request):
     
-    if request.method == 'POST':        # Se asegura de que el formulario entre por POST
+    if request.method == 'POST':
         
         formulario = AlumnoFormulario(request.POST)
         
-        if formulario.is_valid():        # Chequea que el formulario esa correcto
-            data = formulario.cleaned_data     #Le pide la información limpia al formulario
+        if formulario.is_valid():
+            data = formulario.cleaned_data
             
             nombre = data['nombre']
             apellido = data['apellido']
             edad = data['edad']
-            fecha_nacimiento = data.get('fecha_nacimiento', datetime.now())     #Si no hay fecha de nacimiento ingresada pone la de ahora
+            fecha_inicio_curso = data.get('fecha_inicio_curso', datetime.now())
             
-            alumno = Alumno(nombre=nombre, apellido=apellido, edad=random.randrange(1,99), fecha_nacimiento=datetime.now())
+            alumno = Alumno(nombre=nombre, apellido=apellido, edad=edad, fecha_inicio_curso=fecha_inicio_curso)
             alumno.save()
         
-        return redirect('ver_alumnos')   # redirige a ver los familiares
+        return redirect('ver_alumnos')
     
-    formulario = AlumnoFormulario()       # Hago la variable formulario traida de familiar
+    formulario = AlumnoFormulario()
     
-    return render(request, 'home/crear_alumno.html', {'formulario': formulario})  # Paso el formulario como contexto
+    return render(request, 'home/crear_alumno.html', {'formulario': formulario})
 
 def ver_alumnos(request):
     
-    nombre = request.GET.get('nombre')  # Es para buscar por nombre
+    nombre = request.GET.get('nombre')
+    apellido = request.GET.get('apellido')
     
     if nombre:
-        alumnos = Alumno.objects.filter(nombre__icontains=nombre)     #Filtra todos los que tengan nombre aunque no esté escrita toda la palabra
+        alumnos = Alumno.objects.filter(nombre__icontains=nombre)
+    elif apellido:
+        alumnos = Alumno.objects.filter(apellido__icontains=apellido)
     else:
-        alumnos = Alumno.objects.all()     # Le pide a la base de datos todos los objetos de Familiares
+        alumnos = Alumno.objects.all()
     
     formulario = BusquedaAlumnoFormulario()
     
-    return render(request, 'home/ver_alumnos.html', {'alumnos': alumnos, 'formulario': formulario})       #Se puede poner asi como forma simplificada
+    return render(request, 'home/ver_alumnos.html', {'alumnos': alumnos, 'formulario': formulario})
