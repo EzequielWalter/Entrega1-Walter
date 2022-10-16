@@ -1,0 +1,18 @@
+{% extends 'home/base.html' %}
+
+
+{% block title_pagina %}
+<title>Crear Alumno</title>
+{% endblock title_pagina %}
+
+
+{% block mi_contenido %}
+<form action={% url 'crear_alumno' %} method="POST">
+    {% csrf_token %}
+    <table>
+        {{formulario}}
+    </table>
+    <button>Crear</button>  <!-- Sirve para lo mismo que el submit-->
+    
+</form>
+{% endblock mi_contenido %}

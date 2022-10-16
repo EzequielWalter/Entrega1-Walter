@@ -1,0 +1,30 @@
+{% extends 'home/index.html'%}       <!-- HERENCIA -> Toma toda la configuracion base del archivo base.html-->
+
+{% block title_pagina %}    <!-- Titulo del "padre" pisado en el "hijo"-->
+<title>Ver alumnos</title>
+{% endblock title_pagina %}
+
+{% block h1_texto_header %} <!--Puedo llamar a un bloque contenido dentro de otro que no llamo-->
+Ver alumnos
+{% endblock h1_texto_header %}
+
+{% block index_contenido %}    <!-- IDENTIFICA QUE PARTE DEL "HIJO" PUEDE SER OCUPADA DENTRO DEL TEMPLATE "PADRE". En este caso el "padre" es Index-->
+    <a class="navbar-brand" href={% url 'crear_alumno' %}>Crear alumno</a>
+    <h1>Listado de Alumnos:</h1>
+
+<form action={% url 'ver_alumnos' %} method="GET">       <!-- Se usa el GET porque es para buscar-->
+            {{formulario}}
+        <button>Buscar</button>
+</form>
+<p>
+    {% if alumnos %}
+
+        {% for alumno in alumnos %}
+            <li>{{alumno.nombre}} {{alumno.apellido}} - edad: {{alumno.edad}} años</li>
+        {% endfor %}
+        
+    {% else %}
+        <p>No se encontraron datos que coincidan con la busqueda</p>
+    {% endif %}
+</p>
+{% endblock index_contenido %}
